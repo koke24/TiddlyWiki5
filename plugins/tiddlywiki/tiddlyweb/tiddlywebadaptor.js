@@ -13,7 +13,9 @@ A sync adaptor module for synchronising with TiddlyWeb compatible servers
 "use strict";
 
 var CONFIG_HOST_TIDDLER = "$:/config/tiddlyweb/host",
-	DEFAULT_HOST_TIDDLER = "$protocol$//$host$/";
+	DEFAULT_HOST_TIDDLER = "$protocol$//$host$/",
+	CONFIG_COOKIE_TIDDLER = "$:/config/tiddlyweb/cookie",
+	DEFAULT_COOKIE_TIDDLER = "UserName";
 
 function TiddlyWebAdaptor(options) {
 	this.wiki = options.wiki;
@@ -69,6 +71,18 @@ TiddlyWebAdaptor.prototype.getStatus = function(callback) {
 				}
 				// Check if we're logged in
 				isLoggedIn = json.username !== "GUEST";
+        
+				var cookie = self.wiki.getTiddlerText(CONFIG_COOKIE_TIDDLER,DEFAULT_COOKIE_TIDDLER);
+				console.log("Cookie: "+cookie);
+				var cookieRegExp = new RegExp("(?:(?:^|.*;\\s*)"+cookie+"\\s*\\=\\s*([^;]*).*$)|^.*$");
+				var userName = document.cookie.replace(cookieRegExp, "$1");
+				if (userName) {
+					console.log("UserName found: "+userName);
+					json.username = userName;
+					isLoggedIn = true;
+				} else {
+					console.log("UserName not found");
+				}
 			}
 			// Invoke the callback if present
 			if(callback) {
