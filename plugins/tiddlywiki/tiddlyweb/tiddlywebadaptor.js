@@ -73,15 +73,11 @@ TiddlyWebAdaptor.prototype.getStatus = function(callback) {
 				isLoggedIn = json.username !== "GUEST";
         
 				var cookie = self.wiki.getTiddlerText(CONFIG_COOKIE_TIDDLER,DEFAULT_COOKIE_TIDDLER);
-				console.log("Cookie: "+cookie);
 				var cookieRegExp = new RegExp("(?:(?:^|.*;\\s*)"+cookie+"\\s*\\=\\s*([^;]*).*$)|^.*$");
 				var userName = document.cookie.replace(cookieRegExp, "$1");
-				if (userName) {
-					console.log("UserName found: "+userName);
+				if(userName) {
 					json.username = userName;
 					isLoggedIn = true;
-				} else {
-					console.log("UserName not found");
 				}
 			}
 			// Invoke the callback if present

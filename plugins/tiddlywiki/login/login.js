@@ -22,19 +22,15 @@ Cookies.prototype.parse = function() {
   var self = this;
   self.__parsed__ = true;
   var cookies = document.cookie.split(/\s*;\s*/g);
-  console.log("cookies: "+document.cookie);
   var cookie;
   for(var c = 0; c<cookies.length; c++) {
-    console.log("cookie: "+cookies[c]);
     cookie = cookies[c].split("=");
     self[cookie[0]] = cookie[1];
-    //if (cookie[0]=='expires') self.__persist__ = true;
   }    
 }
 Cookies.prototype.set = function(name, value, days) {
   var self = this;
   self[name] = value;
-  //var str = name+"="+value+";path=/";
   var str = name+"="+value;
   if (days) {
     var d = new Date();
@@ -47,38 +43,21 @@ Cookies.prototype.set = function(name, value, days) {
     delete self[name];
   }
   document.cookie = str;
-  console.log("setting cookie: "+str);
 }
 
-var logger = new $tw.utils.Logger("Login");
-logger.log("Hi from login-plugin!");	
-if ($tw.node) {
-	var logger = new $tw.utils.Logger("Login:node");
-	logger.log($tw.wiki.getTiddlerText("$:/SiteTitle"));
-}
-if ($tw.browser) {
-	var logger = new $tw.utils.Logger("Login:browser");
-	logger.log($tw.wiki.getTiddlerText("$:/SiteTitle"));
+if($tw.browser) {
   $tw.wiki.addEventListener('change', function(data) {
     for(var a in data) {
-      //console.log("changed: "+a);
       var matcher = /^\$:\/status\/UserName$/.exec(a);
-      if (matcher) {
+      if(matcher) {
         var cookies = new Cookies();
-        //console.log(""+$tw.wiki.getTiddler(a).getFieldString('text'));
         var userName = $tw.wiki.getTiddlerText(a);
         var cookie = $tw.wiki.getTiddlerText(CONFIG_COOKIE_TIDDLER,DEFAULT_COOKIE_TIDDLER);
         cookies.set(cookie, userName, userName?100:0);
-        if (!userName) $tw.wiki.addTiddler(new $tw.Tiddler("$:/status/IsLoggedIn", { text: "no"}));
+        if(!userName) $tw.wiki.addTiddler(new $tw.Tiddler("$:/status/IsLoggedIn", { text: "no"}));
       }
     }
   });
-
-  /*var cookies = new Cookies();
-  if (cookies['UserName']) {
-    console.log("UserName found: "+cookies['UserName']);
-    $tw.wiki.addTiddler(new $tw.Tiddler("$:/status/UserName", { "text": cookies['UserName'] }));
-  }*/
 }
 
 })();

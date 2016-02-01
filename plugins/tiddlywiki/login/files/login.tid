@@ -6,7 +6,7 @@ title: Login
 type: text/vnd.tiddlywiki
 
 <$reveal type="match" state="$:/status/UserName" text="">
-No he encontrado tu usuario. Por favor, indica tu nombre o nick para identificar tus entradas.
+I haven't found your user. Please insert your name or nick to get your tiddles tagged with your name.
 
 <$edit-text tiddler="$:/temp/holder" tag="input" default={{$:/status/UserName}} placeholder=""></$edit-text>
 <$button set="$:/status/UserName" setTo={{$:/temp/holder}}>
@@ -17,7 +17,7 @@ login
 </$reveal>
 
 <$reveal type="nomatch" state="$:/status/UserName" text="">
-Hola, {{$:/status/UserName}} <$button set="$:/status/UserName" setTo="">
+Hi, {{$:/status/UserName}} <$button set="$:/status/UserName" setTo="">
 <$action-setfield $tiddler="$:/status/UserName" text=""/>
 <$action-setfield $tiddler="$:/status/IsLoggedIn" text="no"/>
 logoff
